@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 import * as fs from 'fs';
 import "reflect-metadata"
 import { activateLogs } from './logs';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -13,6 +14,12 @@ async function bootstrap() {
   );
 
   activateLogs(app)
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Test docs')
