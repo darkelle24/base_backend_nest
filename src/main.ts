@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import "reflect-metadata"
 import { activateLogs } from './logs';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -15,8 +16,11 @@ async function bootstrap() {
 
   activateLogs(app)
 
+  const configService = app.get(ConfigService);
+
   app.useGlobalPipes(
     new ValidationPipe({
+      whitelist: true,
       transform: true,
     }),
   );
@@ -31,6 +35,8 @@ async function bootstrap() {
   fs.writeFileSync("./swagger-spec.json", JSON.stringify(document));
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(configService.get<number>('BACK_PORT'), () => {
+    console.log('[WEB]', `http://localhost:` + configService.get<number>('BACK_PORT'));
+  });
 }
 bootstrap();

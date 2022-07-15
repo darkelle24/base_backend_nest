@@ -16,6 +16,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": ["src/*"],
+      "@Helper/*": ["src/common/*"]
+    },
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"]
   }
 }

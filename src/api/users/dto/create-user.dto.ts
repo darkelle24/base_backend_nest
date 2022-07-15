@@ -1,11 +1,13 @@
-import { Roles } from './../entities/roles';
+import { RolesEnum } from '../../../common/roles/roles';
 import { PartialType } from "@nestjs/mapped-types"
 import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from "class-validator"
+import { Trim } from 'class-sanitizer';
 
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @Length(3, 30)
+  @Trim()
   username: string
 
   @IsNotEmpty()
@@ -15,11 +17,12 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsEmail()
+  @Trim()
   email: string
 }
 
 export class CreateUserAdminDto extends CreateUserDto {
-  @IsEnum(Roles)
+  @IsEnum(RolesEnum)
   @IsOptional()
-  role: Roles
+  role: RolesEnum
 }

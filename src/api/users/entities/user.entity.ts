@@ -1,27 +1,24 @@
-import { Roles } from './roles';
+import { RolesEnum } from '../../../common/roles/roles';
 import { Entity, Column, PrimaryGeneratedColumn, Unique, BaseEntity } from 'typeorm';
-import { Exclude } from 'class-transformer';
 
 @Entity()
-@Unique(["username", "email"])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({unique: true})
   username: string
 
-  @Column()
-  @Exclude({ toPlainOnly: true })
+  @Column({select: false})
   password: string
 
-  @Column()
+  @Column({unique: true})
   email: string
 
   @Column({
     type: 'enum',
-    enum: Roles,
-    default: Roles.User
+    enum: RolesEnum,
+    default: RolesEnum.User
   })
-  roles: Roles
+  role: RolesEnum
 }

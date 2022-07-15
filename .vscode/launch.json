@@ -16,10 +16,12 @@
                 "tsconfig-paths/register"
             ],
             "sourceMaps": true,
+            "internalConsoleOptions": "openOnSessionStart",
+            "outputCapture": "std",
             "envFile": "${workspaceFolder}/.env",
             "cwd": "${workspaceRoot}",
-            "console": "integratedTerminal",
-            "protocol": "inspector"
+            "console": "internalConsole",
+            "autoAttachChildProcesses": true
         }
     ]
   }
