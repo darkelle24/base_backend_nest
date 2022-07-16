@@ -1,5 +1,6 @@
 import { RolesEnum } from '../../../common/roles/roles';
 import { Entity, Column, PrimaryGeneratedColumn, Unique, BaseEntity } from 'typeorm';
+import { OmitType } from '@nestjs/swagger';
 
 @Entity()
 export class User extends BaseEntity {
@@ -21,4 +22,7 @@ export class User extends BaseEntity {
     default: RolesEnum.User
   })
   role: RolesEnum
+}
+
+export class UserWithoutPassword extends OmitType(User, ['password'] as const) {
 }

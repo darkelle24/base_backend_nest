@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Auth } from './auth/other/auth.decorator';
 import { RolesEnum } from '@/common/roles/roles';
+import { UserWithoutPassword } from './entities/user.entity';
 
 @ApiTags('Users')
 @Controller('users')
@@ -11,23 +12,24 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   @Get()
-  findAll() {
+  @ApiOperation({ description: "dab"})
+  findAll(): Promise<UserWithoutPassword[]> {
     return this.usersService.findAll();
   }
 
   @Get(':uuid')
-  findOne(@Param('uuid') uuid: string) {
+  findOne(@Param('uuid') uuid: string): Promise<UserWithoutPassword> {
     return this.usersService.findOne(uuid);
   }
 
   @Put(':uuid')
-  @Auth(RolesEnum.Admin)
-  update(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto) {
+  @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
+  update(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserWithoutPassword | void> {
     return this.usersService.update(uuid, updateUserDto);
   }
 
   @Delete(':uuid')
-  @Auth()
+  @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
   remove(@Param('uuid') uuid: string) {
     return this.usersService.remove(uuid);
   }
@@ -35,16 +37,19 @@ export class UsersController {
 
 
   @Get('me')
-  getMe(@Param('uuid') uuid: string) {
+  @Auth()
+  getMe(@Param('uuid') uuid: string): Promise<UserWithoutPassword> {
     return this.usersService.findOne(uuid);
   }
 
   @Put('me')
-  updateMe(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto) {
+  @Auth()
+  updateMe(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserWithoutPassword | void> {
     return this.usersService.update(uuid, updateUserDto);
   }
 
   @Delete('me')
+  @Auth()
   removeMe(@Param('uuid') uuid: string) {
     return this.usersService.remove(uuid);
   }

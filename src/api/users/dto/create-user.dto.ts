@@ -1,4 +1,4 @@
-import { RolesEnum } from '../../../common/roles/roles';
+import { RolesEnum } from '@Helper/roles/roles';
 import { PartialType } from "@nestjs/mapped-types"
 import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from "class-validator"
 import { Trim } from 'class-sanitizer';

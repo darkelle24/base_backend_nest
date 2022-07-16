@@ -34,7 +34,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config, {deepScanRoutes: true});
 
   fs.writeFileSync("./swagger-spec.json", JSON.stringify(document));
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {explorer: true});
 
   await app.listen(configService.get<number>('BACK_PORT'), () => {
     console.log('[WEB]', `http://localhost:` + configService.get<number>('BACK_PORT'));

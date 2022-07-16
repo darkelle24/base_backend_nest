@@ -13,5 +13,5 @@ export class LoginDto {
 }
 
 export interface LoginReturnDto extends Omit<User, "password"> {
-  toke: string
+  token: string
 }
