@@ -2,7 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } fro
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from './auth/auth.guard';
+import { Auth } from './auth/other/auth.decorator';
+import { RolesEnum } from '@/common/roles/roles';
 
 @ApiTags('Users')
 @Controller('users')
@@ -19,14 +20,14 @@ export class UsersController {
     return this.usersService.findOne(uuid);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':uuid')
+  @Auth(RolesEnum.Admin)
   update(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(uuid, updateUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':uuid')
+  @Auth()
   remove(@Param('uuid') uuid: string) {
     return this.usersService.remove(uuid);
   }

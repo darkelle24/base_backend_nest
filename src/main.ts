@@ -26,6 +26,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Test docs')
     .setDescription('The test API description')
     .setVersion('1.0')

@@ -4,8 +4,8 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import { AuthHelper } from './auth.helper';
-import { JwtStrategy } from './auth.strategy';
+import { AuthHelper } from './other/auth.helper';
+import { JwtStrategy } from './other/auth.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@/api/users/entities/user.entity';
 

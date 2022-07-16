@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
+import { Injectable, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthGuard, IAuthGuard } from '@nestjs/passport';
 import { User } from '@/api/users/entities/user.entity';
 
@@ -13,6 +13,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements IAuthGuard {
 
     const req = context.switchToHttp().getRequest();
 
-    return req.user ? true : false;
+    if (req.user) {
+      return true
+    }
+    throw new HttpException('You need to be logged to access this route.', HttpStatus.UNAUTHORIZED);
   }
 }

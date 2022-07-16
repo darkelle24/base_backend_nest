@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/api/users/entities/user.entity';
 import { FindOptionsSelectByString, Repository } from 'typeorm';
 import { LoginDto, LoginReturnDto } from './dto/login.dto';
-import { AuthHelper } from './auth.helper';
+import { AuthHelper } from './other/auth.helper';
 import { basicCreate } from '@/common/fn.helper';
 
 @Injectable()
