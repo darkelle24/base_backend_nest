@@ -6,16 +6,16 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthHelper {
-    readonly bcrypt = require('bcrypt');
+  readonly bcrypt = require('bcrypt');
 
-    constructor(
-        @InjectRepository(User)
-        private repository: Repository<User>,
+  constructor(
+    @InjectRepository(User)
+    private repository: Repository<User>,
 
-        private readonly jwt: JwtService,
-    ) { }
+    private readonly jwt: JwtService,
+  ) { }
 
-    // Decoding the JWT Token
+  // Decoding the JWT Token
   public async decode(token: string): Promise<unknown> {
     return this.jwt.decode(token, null);
   }
@@ -40,22 +40,5 @@ export class AuthHelper {
     const salt: string = this.bcrypt.genSaltSync();
 
     return this.bcrypt.hashSync(password, salt);
-  }
-
-  // Validate JWT Token, throw forbidden error if JWT Token is invalid
-  private async validate(token: string): Promise<boolean | never> {
-    const decoded: unknown = this.jwt.verify(token);
-
-    if (!decoded) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
-
-    const user: User = await this.validateUser(decoded);
-
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
-    return true;
   }
 }

@@ -38,6 +38,7 @@ async function bootstrap() {
 
   await app.listen(configService.get<number>('BACK_PORT'), () => {
     console.log('[WEB]', `http://localhost:` + configService.get<number>('BACK_PORT'));
+    console.log('[API]', `http://localhost:` + configService.get<number>('BACK_PORT') + '/api');
   });
 }
 bootstrap();
