@@ -1,3 +1,4 @@
+import { TypeORMErrorFilter } from './common/exceptionFilter/type-orm-error.error';
 import { RolesEnum } from '@Helper/roles/roles';
 import { NestFactory } from '@nestjs/core';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
@@ -27,6 +28,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.useGlobalFilters(new TypeORMErrorFilter())
 
   const config = new DocumentBuilder()
     .addBearerAuth()

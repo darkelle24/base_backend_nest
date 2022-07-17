@@ -3,7 +3,7 @@ import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
 import { User } from '@/api/users/entities/user.entity';
 import { JwtAuthGuard } from './other/auth.guard';
 import { AuthService } from './auth.service';
-import { LoginDto, LoginReturnDto } from './dto/login.dto';
+import { LoginDto, AuthReturnDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
@@ -13,12 +13,13 @@ export class AuthController {
   readonly service: AuthService;
 
   @Post('register')
-  register(@Body() body: CreateUserDto): Promise<User | void> {
-    return this.service.register(body);
+  register(@Body() body: CreateUserDto): Promise<AuthReturnDto> {
+    return this.service.register(body)
+      .then(result => this.service.login({username: result.username, password: body.password}));
   }
 
   @Post('login')
-  login(@Body() body: LoginDto): Promise<LoginReturnDto> {
+  login(@Body() body: LoginDto): Promise<AuthReturnDto> {
     return this.service.login(body);
   }
 }

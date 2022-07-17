@@ -34,7 +34,7 @@ export class UsersService {
     })
   }
 
-  createAdmin(createUserDto: CreateUserAdminDto): Promise<User | void> {
+  createAdmin(createUserDto: CreateUserAdminDto): Promise<User> {
     return basicCreate(this.usersRepository, User, createUserDto)
   }
 
@@ -46,7 +46,7 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id: uuid });
   }
 
-  update(uuid: string, updateUserDto: UpdateUserDto): Promise<User | void> {
+  update(uuid: string, updateUserDto: UpdateUserDto): Promise<User> {
     return basicUpdate(this.usersRepository, User, uuid, updateUserDto)
   }
 

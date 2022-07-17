@@ -25,13 +25,13 @@ export class UsersController {
 
   @Post()
   @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
-  createUserAdmin(@Body() body: CreateUserAdminDto): Promise<UserWithoutPassword | void> {
+  createUserAdmin(@Body() body: CreateUserAdminDto): Promise<UserWithoutPassword> {
     return this.usersService.createAdmin(body);
   }
 
   @Put(':uuid')
   @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
-  update(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserWithoutPassword | void> {
+  update(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserWithoutPassword> {
     return this.usersService.update(uuid, updateUserDto);
   }
 
@@ -51,7 +51,7 @@ export class UsersController {
 
   @Put('me')
   @Auth()
-  updateMe(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserWithoutPassword | void> {
+  updateMe(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserWithoutPassword> {
     return this.usersService.update(uuid, updateUserDto);
   }
 
