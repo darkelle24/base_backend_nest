@@ -3,7 +3,7 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/api/users/entities/user.entity';
 import { FindOptionsSelectByString, Repository } from 'typeorm';
-import { LoginDto, LoginReturnDto } from './dto/login.dto';
+import { LoginDto, AuthReturnDto } from './dto/login.dto';
 import { AuthHelper } from './other/auth.helper';
 import { basicCreate } from '@/common/fn.helper';
 
@@ -19,7 +19,7 @@ export class AuthService {
 
   userEntities: string[] = this.repository.metadata.ownColumns.map(column => column.propertyName)
 
-  public async register(body: CreateUserDto): Promise<User | void> {
+  public async register(body: CreateUserDto): Promise<User> {
     const { username, email, password }: CreateUserDto = body;
 
     let user = new User();
@@ -39,7 +39,7 @@ export class AuthService {
     return this.repository.findOne({ where: [{ username: usernameOrEmail }, { email: usernameOrEmail}], select: (this.userEntities as FindOptionsSelectByString<User>)})
   }
 
-  public async login(body: LoginDto): Promise<LoginReturnDto> {
+  public async login(body: LoginDto): Promise<AuthReturnDto> {
     const { username, password }: LoginDto = body;
     const user: User = await this.findOneUserWithPassword(username);
 
