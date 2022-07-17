@@ -4,7 +4,9 @@ import { User } from '@/api/users/entities/user.entity';
 import { JwtAuthGuard } from './other/auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDto, LoginReturnDto } from './dto/login.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   @Inject(AuthService)
