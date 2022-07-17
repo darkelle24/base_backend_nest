@@ -39,7 +39,7 @@ export class AuthService {
     return this.repository.findOne({ where: [{ username: usernameOrEmail }, { email: usernameOrEmail}], select: (this.userEntities as FindOptionsSelectByString<User>)})
   }
 
-  public async login(body: LoginDto): Promise<LoginReturnDto | never> {
+  public async login(body: LoginDto): Promise<LoginReturnDto> {
     const { username, password }: LoginDto = body;
     const user: User = await this.findOneUserWithPassword(username);
 

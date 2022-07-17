@@ -18,7 +18,7 @@ export class RolesGuard implements CanActivate {
     let { user } = context.switchToHttp().getRequest();
 
     if ((user as User).role) {
-      if ((user as User).role in requiredRoles) {
+      if (requiredRoles.includes((user as User).role)) {
         return true
       }
       throw new HttpException('You don\'t have the right to access this route.', HttpStatus.FORBIDDEN);

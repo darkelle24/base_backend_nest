@@ -1,3 +1,4 @@
+import { CreateUserAdminDto } from './dto/create-user.dto';
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -20,6 +21,12 @@ export class UsersController {
   @Get(':uuid')
   findOne(@Param('uuid') uuid: string): Promise<UserWithoutPassword> {
     return this.usersService.findOne(uuid);
+  }
+
+  @Post()
+  @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
+  createUserAdmin(@Body() body: CreateUserAdminDto): Promise<UserWithoutPassword | void> {
+    return this.usersService.createAdmin(body);
   }
 
   @Put(':uuid')

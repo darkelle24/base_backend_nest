@@ -12,7 +12,7 @@ import { User } from '@/api/users/entities/user.entity';
 @Module({
   controllers: [AuthController],
   providers: [AuthService, AuthHelper, JwtStrategy],
-  exports: [AuthService],
+  exports: [AuthService, AuthHelper],
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt', property: 'user' }),
