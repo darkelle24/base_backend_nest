@@ -1,8 +1,8 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { UserEntity } from '@/api/users/entities/user.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { User } from '@/api/users/entities/user.entity';
 import { AuthHelper } from './auth.helper';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  private validate(payload: string): Promise<User | never> {
+  private validate(payload: string): Promise<UserEntity | never> {
     return this.helper.validateUser(payload)
   }
 }

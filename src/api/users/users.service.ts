@@ -1,26 +1,26 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { basicCreate, basicUpdate } from '@/common/fn.helper';
-import { FindOptionsSelectByString, getConnection, InsertResult, QueryFailedError, Repository, UpdateResult } from 'typeorm';
-import { CreateUserDto, CreateUserAdminDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
-import { ConfigService } from '@nestjs/config';
 import { RolesEnum } from '@/common/roles/roles';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { AuthHelper } from './auth/other/auth.helper';
+import { CreateUserAdminDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
 
     private configService: ConfigService,
 
     @Inject(AuthHelper)
     private readonly helper: AuthHelper
   ) {
-    basicCreate(this.usersRepository, User, {
+    basicCreate(this.usersRepository, UserEntity, {
       username: this.configService.get<string>('FIRST_USER_USERNAME'),
       password: this.helper.encodePassword(this.configService.get<string>('FIRST_USER_PASSWORD')),
       email: this.configService.get<string>('FIRST_USER_EMAIL'),
@@ -34,23 +34,40 @@ export class UsersService {
     })
   }
 
-  createAdmin(createUserDto: CreateUserAdminDto): Promise<User> {
-    return basicCreate(this.usersRepository, User, createUserDto)
+  createAdmin(createUserDto: CreateUserAdminDto): Promise<UserEntity> {
+    return basicCreate(this.usersRepository, UserEntity, createUserDto)
   }
 
-  findAll(): Promise<User[]> {
+  findAll(): Promise<UserEntity[]> {
     return this.usersRepository.find();
   }
 
-  findOne(uuid: string): Promise<User> {
-    return this.usersRepository.findOneBy({ id: uuid });
+  findOne(uuid: string): Promise<UserEntity> {
+    const user = this.usersRepository.findOneBy({ id: uuid });
+
+    if (!user) {
+      throw new HttpException('No user found', HttpStatus.NOT_FOUND);
+    }
+    return user
   }
 
-  update(uuid: string, updateUserDto: UpdateUserDto): Promise<User> {
-    return basicUpdate(this.usersRepository, User, uuid, updateUserDto)
+  update(uuid: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    return basicUpdate(this.usersRepository, UserEntity, uuid, updateUserDto)
   }
 
   async remove(uuid: string): Promise<void> {
     await this.usersRepository.delete(uuid);
+  }
+
+  async checkAuth(uuid: string, caller: UserEntity): Promise<UserEntity> {
+    const user = await this.findOne(uuid)
+
+    if (caller.role === RolesEnum.Admin && (user.role === RolesEnum.Admin || user.role === RolesEnum.SuperAdmin)) {
+      throw new HttpException('You don\'t have the right to access this route.', HttpStatus.BAD_REQUEST);
+    } else if (caller.role === RolesEnum.SuperAdmin && user.role === RolesEnum.SuperAdmin) {
+      throw new HttpException('You don\'t have the right to access this route.', HttpStatus.BAD_REQUEST);
+    }
+
+    return user
   }
 }

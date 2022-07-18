@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, Unique, BaseEntity } from 'type
 import { OmitType } from '@nestjs/swagger';
 
 @Entity()
-export class User extends BaseEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -24,5 +24,5 @@ export class User extends BaseEntity {
   role: RolesEnum
 }
 
-export class UserWithoutPassword extends OmitType(User, ['password'] as const) {
+export class UserWithoutPassword extends OmitType(UserEntity, ['password'] as const) {
 }

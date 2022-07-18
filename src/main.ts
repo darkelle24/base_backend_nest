@@ -10,7 +10,6 @@ import { activateLogs } from './logs';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { basicCreate } from './common/fn.helper';
-import { User } from './api/users/entities/user.entity';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
