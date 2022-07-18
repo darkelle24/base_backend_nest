@@ -1,9 +1,9 @@
-import { RolesEnum } from '@Helper/roles/roles';
-import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from './auth.guard';
-import { ApiBearerAuth, ApiForbiddenResponse, ApiOperation, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { RolesGuard } from '@Helper/roles/roles.guard';
 import { AddDescription } from '@Helper/add-description.decorator';
+import { RolesEnum } from '@Helper/roles/roles';
+import { RolesGuard } from '@Helper/roles/roles.guard';
+import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiForbiddenResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { JwtAuthGuard } from './auth.guard';
 
 /**
  * Decorator that check if the user is logged and check if it as a valid role to access this route

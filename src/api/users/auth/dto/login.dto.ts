@@ -1,6 +1,6 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from "class-validator"
-import { User } from '@/api/users/entities/user.entity';
+import { UserEntity } from '@/api/users/entities/user.entity';
 import { OmitType } from "@nestjs/swagger";
+import { IsNotEmpty, IsString, Length } from "class-validator";
 
 export class LoginDto {
   @IsNotEmpty()
@@ -13,6 +13,6 @@ export class LoginDto {
   username: string
 }
 
-export class AuthReturnDto extends OmitType(User, ["password"] as const) {
+export class AuthReturnDto extends OmitType(UserEntity, ["password"] as const) {
   token: string
 }
