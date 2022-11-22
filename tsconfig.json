@@ -26,6 +26,7 @@
       "@Helper/*": ["src/common/*"],
 
       "@User/*": ["src/api/users/*"],
+      "@File/*": ["src/api/files/*"],
       "@Api/*": ["src/api/*"],
 
       "@/*": ["src/*"],

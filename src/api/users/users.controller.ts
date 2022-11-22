@@ -1,5 +1,7 @@
 import { RolesEnum } from '@/common/roles/roles';
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { FilesService } from '@File/files.service';
+import { ApiFile, ApiImageFile } from '@FileUploadHelpers/api-file.decorator';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UploadedFile } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from './auth/other/auth.decorator';
 import { CreateUserAdminDto } from './dto/create-user.dto';
@@ -11,7 +13,35 @@ import { UsersService } from './users.service';
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService, private readonly fileService: FilesService) { }
+
+  @Get('me')
+  @Auth()
+  getMe(@User() user: UserEntity): Promise<UserWithoutPassword> {
+    return this.usersService.findOne(user.id);
+  }
+
+  @Put('me')
+  @Auth()
+  updateMe(@User() user: UserEntity, @Body() updateUserDto: UpdateUserDto): Promise<UserWithoutPassword> {
+    return this.usersService.update(user.id, updateUserDto);
+  }
+
+  @Put('me/picture')
+  @Auth()
+  @ApiImageFile('picture')
+  async updateMePicture(@User() user: UserEntity, @UploadedFile() file: Express.Multer.File): Promise<UserWithoutPassword> {
+    let save = await this.fileService.createFile(file)
+    return this.usersService.updatePicture(user.id, save);
+  }
+
+  @Delete('me')
+  @Auth()
+  removeMe(@User() user: UserEntity) {
+    return this.usersService.remove(user.id);
+  }
+
+
 
   @Get()
   @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
@@ -41,30 +71,19 @@ export class UsersController {
     return this.usersService.update(uuid, updateUserDto);
   }
 
+  @Put(':uuid/picture')
+  @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
+  @ApiImageFile('picture')
+  async updatePicture(@Param('uuid') uuid: string, @User() user: UserEntity, @UploadedFile() file: Express.Multer.File): Promise<UserWithoutPassword> {
+    await this.usersService.checkAuth(uuid, user)
+    let save = await this.fileService.createFile(file)
+    return this.usersService.updatePicture(uuid, save);
+  }
+
   @Delete(':uuid')
   @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
   async remove(@Param('uuid') uuid: string, @User() user: UserEntity) {
     await this.usersService.checkAuth(uuid, user)
     return this.usersService.remove(uuid);
-  }
-
-
-
-  @Get('me')
-  @Auth()
-  getMe(@User() user: UserEntity): Promise<UserWithoutPassword> {
-    return this.usersService.findOne(user.id);
-  }
-
-  @Put('me')
-  @Auth()
-  updateMe(@User() user: UserEntity, @Body() updateUserDto: UpdateUserDto): Promise<UserWithoutPassword> {
-    return this.usersService.update(user.id, updateUserDto);
-  }
-
-  @Delete('me')
-  @Auth()
-  removeMe(@User() user: UserEntity) {
-    return this.usersService.remove(user.id);
   }
 }

@@ -8,6 +8,7 @@ import { AuthHelper } from './auth/other/auth.helper';
 import { CreateUserAdminDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
+import { FileEntity } from '@File/entities/file.entity';
 
 @Injectable()
 export class UsersService {
@@ -53,6 +54,10 @@ export class UsersService {
 
   update(uuid: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     return basicUpdate(this.usersRepository, UserEntity, uuid, updateUserDto)
+  }
+
+  updatePicture(uuid: string, file: FileEntity) {
+    return basicUpdate(this.usersRepository, UserEntity, uuid, {picture: file})
   }
 
   async remove(uuid: string): Promise<void> {
