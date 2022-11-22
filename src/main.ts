@@ -1,7 +1,5 @@
 import { TypeORMErrorFilter } from './common/exceptionFilter/type-orm-error.error';
-import { RolesEnum } from '@Helper/roles/roles';
 import { NestFactory } from '@nestjs/core';
-import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as fs from 'fs';
@@ -9,13 +7,9 @@ import "reflect-metadata"
 import { activateLogs } from './logs';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { basicCreate } from './common/fn.helper';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter()
-  );
+  const app = await NestFactory.create(AppModule);
 
   activateLogs(app)
 

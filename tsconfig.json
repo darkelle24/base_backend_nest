@@ -18,8 +18,17 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@ExecptionFilter": ["src/common/exceptionFilter/type-orm-error.error.ts"],
+      "@Roles/*": ["src/common/roles/*"],
+      "@FileUploadHelpers/*": ["src/common/files/upload/*"],
+      "@FileDownloadHelpers/*": ["src/common/files/download/*"],
+      "@FileHelpers/*": ["src/common/files/*"],
+      "@Helper/*": ["src/common/*"],
+
+      "@User/*": ["src/api/users/*"],
+      "@Api/*": ["src/api/*"],
+
       "@/*": ["src/*"],
-      "@Helper/*": ["src/common/*"]
     },
     "typeRoots": ["./node_modules/@types"],
     "types": ["node"]

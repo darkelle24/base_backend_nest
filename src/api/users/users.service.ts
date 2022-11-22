@@ -1,5 +1,5 @@
 import { basicCreate, basicUpdate } from '@/common/fn.helper';
-import { RolesEnum } from '@/common/roles/roles';
+import { RolesEnum } from '@Roles/roles';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';

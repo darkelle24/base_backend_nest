@@ -1,6 +1,6 @@
-import { RolesEnum } from '../../../common/roles/roles';
 import { Entity, Column, PrimaryGeneratedColumn, Unique, BaseEntity } from 'typeorm';
 import { OmitType } from '@nestjs/swagger';
+import { RolesEnum } from '@Helper/roles/roles';
 
 @Entity()
 export class UserEntity extends BaseEntity {
