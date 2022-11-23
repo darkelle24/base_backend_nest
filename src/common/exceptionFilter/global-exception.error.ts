@@ -38,7 +38,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             break;
           case BadRequestException:
             status = HttpStatus.BAD_REQUEST
-            message = (exception as any).response && (exception as any).response.message ? (exception as any).response.message : (exception as any).message;
+            if ((exception as any).response && (exception as any).response.message) {
+              message = (exception as any).response.message;
+            } else if ((exception as any).message) {
+              message = (exception as any).message;
+            }
             code = (exception as any).code;
             break;
           default:
