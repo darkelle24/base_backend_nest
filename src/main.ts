@@ -1,4 +1,3 @@
-import { TypeORMErrorFilter } from './common/exceptionFilter/type-orm-error.error';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -7,6 +6,7 @@ import "reflect-metadata"
 import { activateLogs } from './logs';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { GlobalExceptionFilter } from '@ExecptionFilter/global-exception.error';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,7 +22,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new TypeORMErrorFilter())
+  app.useGlobalFilters(new GlobalExceptionFilter())
 
   const config = new DocumentBuilder()
     .addBearerAuth()
