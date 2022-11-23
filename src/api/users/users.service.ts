@@ -9,6 +9,7 @@ import { CreateUserAdminDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { FileEntity } from '@File/entities/file.entity';
+import { unlink } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -56,8 +57,13 @@ export class UsersService {
     return basicUpdate(this.usersRepository, UserEntity, uuid, updateUserDto)
   }
 
-  updatePicture(uuid: string, file: FileEntity) {
-    return basicUpdate(this.usersRepository, UserEntity, uuid, {picture: file})
+  async updatePicture(uuid: string, file: FileEntity) {
+    let find = await this.findOne(uuid)
+    if (find && find.picture) {
+      find.picture.remove()
+    }
+    find.picture = file
+    return find.save()
   }
 
   async remove(uuid: string): Promise<void> {

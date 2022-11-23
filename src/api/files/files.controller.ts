@@ -11,7 +11,7 @@ import { AddDescription } from '@Helper/add-description.decorator';
 export class FilesController {
   constructor(private readonly filesService: FilesService) { }
 
-  @Get('download/:uuid')
+  @Get('download/:id')
   @AddDescription('Download file')
   @ApiResponse({
     schema: {
@@ -20,14 +20,14 @@ export class FilesController {
     },
     status: HttpStatus.OK,
   })
-  async download(@Param('uuid') id: string, @Res({ passthrough: true }) response: Express.Response) {
+  async download(@Param('id') id: string, @Res({ passthrough: true }) response: Express.Response) {
     let file = await this.filesService.findOne(id);
     const fileStream = this.filesService.fileStream(file.path);
     (response as any).attachment(file.name);
     return new StreamableFile(fileStream, {type: file.mimetype});
   }
 
-  @Get('show/:uuid')
+  @Get('show/:id')
   @AddDescription('Show file')
   @ApiResponse({
     schema: {
@@ -36,7 +36,7 @@ export class FilesController {
     },
     status: HttpStatus.OK,
   })
-  async show(@Param('uuid') id: string, @Res({ passthrough: true }) response: Express.Response) {
+  async show(@Param('id') id: string, @Res({ passthrough: true }) response: Express.Response) {
     let file = await this.filesService.findOne(id);
     const fileStream = this.filesService.fileStream(file.path);
     return new StreamableFile(fileStream, {type: file.mimetype});
@@ -54,15 +54,15 @@ export class FilesController {
     return this.filesService.findAll();
   }
 
-  @Get(':uuid')
+  @Get(':id')
   @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
-  findOne(@Param('uuid') id: string) {
+  findOne(@Param('id') id: string) {
     return this.filesService.findOne(id);
   }
 
-  @Delete(':uuid')
+  @Delete(':id')
   @Auth(RolesEnum.Admin, RolesEnum.SuperAdmin)
-  remove(@Param('uuid') id: string) {
+  remove(@Param('id') id: string) {
     return this.filesService.remove(id);
   }
 }

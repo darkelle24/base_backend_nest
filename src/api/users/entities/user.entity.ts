@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, BaseEntity, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, BaseEntity, OneToMany, OneToOne, JoinColumn, BeforeRemove } from 'typeorm';
 import { OmitType } from '@nestjs/swagger';
 import { RolesEnum } from '@Helper/roles/roles';
 import { FileEntity } from '@File/entities/file.entity';
@@ -26,9 +26,17 @@ export class UserEntity extends BaseEntity {
 
   @OneToOne(() => FileEntity, {
     eager: true,
+    onDelete: 'SET NULL'
   })
   @JoinColumn()
   picture?: FileEntity
+
+  @BeforeRemove()
+  removePicture() {
+    if (this.picture) {
+      this.picture.remove()
+    }
+  }
 }
 
 export class UserWithoutPassword extends OmitType(UserEntity, ['password'] as const) {
