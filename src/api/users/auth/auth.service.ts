@@ -2,6 +2,7 @@ import { UserEntity } from '@/api/users/entities/user.entity';
 import { basicCreate } from '@/common/fn.helper';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UsersService } from '@User/users.service';
 import { FindOptionsSelectByString, Repository } from 'typeorm';
 import { CreateUserDto } from './../dto/create-user.dto';
 import { AuthReturnDto, LoginDto } from './dto/login.dto';
@@ -14,7 +15,8 @@ export class AuthService {
     private readonly repository: Repository<UserEntity>,
 
     @Inject(AuthHelper)
-    private readonly helper: AuthHelper
+    private readonly helper: AuthHelper,
+    private readonly userService: UsersService
   ) {}
 
   userEntities: string[] = this.repository.metadata.ownColumns.map(column => column.propertyName)
@@ -24,11 +26,11 @@ export class AuthService {
 
     let user = new UserEntity();
 
-    user.username = username;
-    user.email = email;
-    user.password = this.helper.encodePassword(password);
+    body.username = username;
+    body.email = email;
+    body.password = this.helper.encodePassword(password);
 
-    return basicCreate(this.repository, UserEntity, user).then((value) => {
+    return this.userService.create(body).then((value) => {
       if (value)
         delete value.password
       return value
@@ -44,13 +46,13 @@ export class AuthService {
     const user: UserEntity = await this.findOneUserWithPassword(username);
 
     if (!user) {
-      throw new HttpException('No user found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Wrong email/username or password', HttpStatus.NOT_FOUND);
     }
 
     const isPasswordValid: boolean = this.helper.isPasswordValid(password, user.password);
 
     if (!isPasswordValid) {
-      throw new HttpException('No user found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Wrong email/username or password', HttpStatus.NOT_FOUND);
     }
 
     const token = await this.helper.generateToken(user)

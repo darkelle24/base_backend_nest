@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryFailedError, Repository } from 'typeorm';
 import { AuthHelper } from './auth/other/auth.helper';
-import { CreateUserAdminDto } from './dto/create-user.dto';
+import { CreateUserAdminDto, CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { FileEntity } from '@File/entities/file.entity';
@@ -37,6 +37,10 @@ export class UsersService {
   }
 
   createAdmin(createUserDto: CreateUserAdminDto): Promise<UserEntity> {
+    return basicCreate(this.usersRepository, UserEntity, createUserDto)
+  }
+
+  create(createUserDto: CreateUserDto) {
     return basicCreate(this.usersRepository, UserEntity, createUserDto)
   }
 
